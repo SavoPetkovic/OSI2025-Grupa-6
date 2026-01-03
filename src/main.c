@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "admin.h"
 #include "login.h"
 
@@ -8,9 +9,9 @@ int main() {
     if (prijavaKorisnika(uloga)) {
         printf("\nDobrodosli! Pristup funkcionalnostima sistema za ulogu: %s\n", uloga);
 
-        // Primjer: pozivanje registracije ako je admin
+        // Pozivanje registracije samo za admina
         if (strcmp(uloga, "admin") == 0) {
-            registracijaKorisnika();  // admin moze dodavati nove korisnike
+            registracijaKorisnika();
         } else {
             printf("Ostale funkcionalnosti ce biti implementirane kasnije.\n");
         }
