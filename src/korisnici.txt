@@ -1,3 +1,3 @@
 Ime: Mico | Prezime: Petkovic | Tip: admin | Email: mico@gmail.com | Lozinka: comi123 | Broj telefona: 065493042 | Adresa: Teslic Karadjordjeva Lf2 | Datum rodjenja: 12.09.1968
-Ime: Savo | Prezime: Petkovic | Tip: ucenik | Email: savo@gmail.com | Lozinka: sifra123 | Broj telefona: 065493042 | Adresa: Karadjordjeva LF2 | Datum rodjenja: 18.12.2004
-Ime: dragan | Prezime:petkovic | Tip:ucenik | Email:dragan@gmail.com | Lozinka:sifra999 | Status: blokiran | Razlog: test123
+Ime: Savo  | Prezime: Petkovic  | Tip: ucenik  | Email: savo@gmail.com  | Lozinka: sifra123  | Broj telefona: 065493042  | Adresa: Karadjordjeva LF2  | Datum rodjenja: 18.12.2004 | Status: blokiran | Razlog: tttt
+

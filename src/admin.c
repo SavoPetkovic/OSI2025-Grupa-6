@@ -3,7 +3,8 @@
 #include <ctype.h>
 #include "admin.h"
 
-void blokirajKorisnika() {
+void blokirajKorisnika() 
+{
     FILE *f = fopen("korisnici.txt", "r");
     FILE *temp = fopen("temp.txt", "w");
 
@@ -14,7 +15,7 @@ void blokirajKorisnika() {
 
     char email[50];
     char razlog[100];
-    char linija[500];
+    char linija[600];
     int pronadjen = 0;
 
     printf("Unesite email korisnika za blokiranje: ");
@@ -23,7 +24,7 @@ void blokirajKorisnika() {
 
     printf("Unesite razlog blokiranja: ");
     fgets(razlog, sizeof(razlog), stdin);
-    razlog[strcspn(razlog, "\n")] = 0;
+    razlog[strcspn(razlog, "\n")] = 0; // uklanja \n sa fgets
 
     while (fgets(linija, sizeof(linija), f)) {
         if (strstr(linija, email)) {
@@ -33,21 +34,19 @@ void blokirajKorisnika() {
                 printf("Nalog je vec blokiran.\n");
                 fputs(linija, temp);
             } else {
-                char novaLinija[600];
-                sscanf(linija,
-                    "Ime: %*[^|]| Prezime: %*[^|]| Tip: %*[^|]| Email: %*[^|]| Lozinka: %*[^|]|",
-                    NULL);
-
-                // ručno sastavljanje nove linije
+                // Parsiramo sve postojeće podatke
                 char ime[50], prezime[50], tip[20], mail[50], lozinka[50];
+                char broj[20], adresa[100], datum[20];
 
                 sscanf(linija,
-                    "Ime: %49[^|]| Prezime: %49[^|]| Tip: %19[^|]| Email: %49[^|]| Lozinka: %49[^|]|",
-                    ime, prezime, tip, mail, lozinka);
+                    "Ime: %49[^|]| Prezime: %49[^|]| Tip: %19[^|]| Email: %49[^|]| Lozinka: %49[^|]| Broj telefona: %19[^|]| Adresa: %99[^|]| Datum rodjenja: %19[^\n]",
+                    ime, prezime, tip, mail, lozinka, broj, adresa, datum);
 
+                // Sastavljamo novu liniju sa statusom i razlogom
+                char novaLinija[800];
                 sprintf(novaLinija,
-                    "Ime: %s| Prezime:%s| Tip:%s| Email:%s| Lozinka:%s| Status: blokiran | Razlog: %s\n",
-                    ime, prezime, tip, mail, lozinka, razlog);
+                    "Ime: %s | Prezime: %s | Tip: %s | Email: %s | Lozinka: %s | Broj telefona: %s | Adresa: %s | Datum rodjenja: %s | Status: blokiran | Razlog: %s\n",
+                    ime, prezime, tip, mail, lozinka, broj, adresa, datum, razlog);
 
                 fputs(novaLinija, temp);
                 printf("Korisnik uspjesno blokiran.\n");
@@ -68,7 +67,9 @@ void blokirajKorisnika() {
     }
 }
 
-void adminMeni() {
+
+void adminMeni() 
+{
     int izbor;
 
     do {
@@ -96,7 +97,8 @@ void adminMeni() {
 }
 
 
-void registracijaKorisnika(void) {
+void registracijaKorisnika(void) 
+{
     char ime[50], prezime[50], email[50], tip[20], lozinka[50], lozinka2[50];
     char brojTelefona[20], adresa[100], datumRodjenja[15];
     char potvrda, odustani;
