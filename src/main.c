@@ -11,7 +11,7 @@ int main() {
 
         // Pozivanje registracije samo za admina
         if (strcmp(uloga, "admin") == 0) {
-            registracijaKorisnika();
+            adminMeni();
         } else {
             printf("Ostale funkcionalnosti ce biti implementirane kasnije.\n");
         }

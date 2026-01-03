@@ -3,6 +3,99 @@
 #include <ctype.h>
 #include "admin.h"
 
+void blokirajKorisnika() {
+    FILE *f = fopen("korisnici.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    if (!f || !temp) {
+        printf("Greska pri radu sa fajlovima.\n");
+        return;
+    }
+
+    char email[50];
+    char razlog[100];
+    char linija[500];
+    int pronadjen = 0;
+
+    printf("Unesite email korisnika za blokiranje: ");
+    scanf("%49s", email);
+    getchar(); // cisti buffer
+
+    printf("Unesite razlog blokiranja: ");
+    fgets(razlog, sizeof(razlog), stdin);
+    razlog[strcspn(razlog, "\n")] = 0;
+
+    while (fgets(linija, sizeof(linija), f)) {
+        if (strstr(linija, email)) {
+            pronadjen = 1;
+
+            if (strstr(linija, "Status: blokiran")) {
+                printf("Nalog je vec blokiran.\n");
+                fputs(linija, temp);
+            } else {
+                char novaLinija[600];
+                sscanf(linija,
+                    "Ime: %*[^|]| Prezime: %*[^|]| Tip: %*[^|]| Email: %*[^|]| Lozinka: %*[^|]|",
+                    NULL);
+
+                // ručno sastavljanje nove linije
+                char ime[50], prezime[50], tip[20], mail[50], lozinka[50];
+
+                sscanf(linija,
+                    "Ime: %49[^|]| Prezime: %49[^|]| Tip: %19[^|]| Email: %49[^|]| Lozinka: %49[^|]|",
+                    ime, prezime, tip, mail, lozinka);
+
+                sprintf(novaLinija,
+                    "Ime: %s| Prezime:%s| Tip:%s| Email:%s| Lozinka:%s| Status: blokiran | Razlog: %s\n",
+                    ime, prezime, tip, mail, lozinka, razlog);
+
+                fputs(novaLinija, temp);
+                printf("Korisnik uspjesno blokiran.\n");
+            }
+        } else {
+            fputs(linija, temp);
+        }
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    remove("korisnici.txt");
+    rename("temp.txt", "korisnici.txt");
+
+    if (!pronadjen) {
+        printf("Korisnik nije pronadjen.\n");
+    }
+}
+
+void adminMeni() {
+    int izbor;
+
+    do {
+        printf("\n=== ADMIN MENI ===\n");
+        printf("1. Registracija korisnika\n");
+        printf("2. Blokiranje korisnika\n");
+        printf("0. Izlaz\n");
+        printf("Izbor: ");
+        scanf("%d", &izbor);
+
+        switch (izbor) {
+            case 1:
+                registracijaKorisnika();
+                break;
+            case 2:
+                blokirajKorisnika();
+                break;
+            case 0:
+                printf("Izlaz iz admin menija.\n");
+                break;
+            default:
+                printf("Nepoznata opcija.\n");
+        }
+    } while (izbor != 0);
+}
+
+
 void registracijaKorisnika(void) {
     char ime[50], prezime[50], email[50], tip[20], lozinka[50], lozinka2[50];
     char brojTelefona[20], adresa[100], datumRodjenja[15];
