@@ -4,9 +4,11 @@
 #include "admin.h"
 
 void registracijaKorisnika(void) {
-    char ime[50], prezime[50], email[50], tip[20], lozinka[50], lozinka2[50], potvrda, odustani;
+    char ime[50], prezime[50], email[50], tip[20], lozinka[50], lozinka2[50];
+    char brojTelefona[20], adresa[100], datumRodjenja[15];
+    char potvrda, odustani;
     FILE *f;
-    char linija[200];
+    char linija[300];
     int vecPostoji = 0;
 
     printf("=== Registracija korisnika ===\n");
@@ -24,8 +26,9 @@ void registracijaKorisnika(void) {
         scanf("%19s", tip);
 
         // Provjera validnosti tipa
-        for(int i=0; tip[i]; i++) tip[i] = tolower(tip[i]); // mala slova
-    } while (strcmp(tip,"ucenik") !=0 && strcmp(tip,"roditelj") !=0 && strcmp(tip,"nastavnik") !=0 && strcmp(tip,"admin") !=0);
+        for(int i=0; tip[i]; i++) tip[i] = tolower(tip[i]);
+    } while (strcmp(tip,"ucenik") !=0 && strcmp(tip,"roditelj") !=0 &&
+             strcmp(tip,"nastavnik") !=0 && strcmp(tip,"admin") !=0);
 
     // Unos email-a i provjera da li vec postoji
     do {
@@ -55,6 +58,16 @@ void registracijaKorisnika(void) {
         }
     } while (vecPostoji);
 
+    // Unos ostalih podataka
+    printf("Unesite broj telefona: ");
+    scanf("%19s", brojTelefona);
+
+    printf("Unesite adresu stanovanja: ");
+    scanf(" %[^\n]%*c", adresa); // cita cijeli red sa razmacima
+
+    printf("Unesite datum rodjenja (dd.mm.yyyy): ");
+    scanf("%14s", datumRodjenja);
+
     // Unos lozinke i potvrda
     do {
         printf("Unesite lozinku: ");
@@ -69,8 +82,9 @@ void registracijaKorisnika(void) {
     } while (strcmp(lozinka, lozinka2) != 0);
 
     // Prikaz podataka i potvrda registracije
-    printf("\nUneseni podaci:\n");
-    printf("Ime: %s\nPrezime: %s\nTip: %s\nEmail: %s\n", ime, prezime, tip, email);
+    printf("\nUneseni podaci:\nIme: %s\nPrezime: %s\nTip: %s\nEmail: %s\nBroj telefona: %s\nAdresa: %s\nDatum rodjenja: %s\n",
+           ime, prezime, tip, email, brojTelefona, adresa, datumRodjenja);
+
     printf("Potvrdite registraciju (Y/N): ");
     scanf(" %c", &potvrda);
 
@@ -86,8 +100,8 @@ void registracijaKorisnika(void) {
         return;
     }
 
-    fprintf(f, "Ime: %s | Prezime: %s | Tip: %s | Email: %s | Lozinka: %s\n",
-            ime, prezime, tip, email, lozinka);
+    fprintf(f, "Ime: %s | Prezime: %s | Tip: %s | Email: %s | Lozinka: %s | Broj telefona: %s | Adresa: %s | Datum rodjenja: %s\n",
+            ime, prezime, tip, email, lozinka, brojTelefona, adresa, datumRodjenja);
     fclose(f);
 
     printf("Korisnik uspjesno registrovan!\n");
