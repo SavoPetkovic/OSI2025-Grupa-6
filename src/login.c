@@ -2,6 +2,21 @@
 #include <string.h>
 #include "login.h"
 
+// Funkcija koja uklanja vodece i pratece razmake iz stringa
+void trim(char *str) {
+    int i;
+    // ukloni trailing spaces
+    i = strlen(str) - 1;
+    while(i >= 0 && (str[i] == ' ' || str[i] == '\t' || str[i]=='\n')) {
+        str[i] = '\0';
+        i--;
+    }
+    // ukloni leading spaces
+    while(*str == ' ' || *str == '\t') {
+        memmove(str, str+1, strlen(str));
+    }
+}
+
 int prijavaKorisnika(char role[20]) {
     char email[50], lozinka[50], linija[300];
     FILE *f;
@@ -28,16 +43,14 @@ int prijavaKorisnika(char role[20]) {
         while (fgets(linija, sizeof(linija), f)) {
             // Provjera emaila i lozinke
             if (strstr(linija, email) && strstr(linija, lozinka)) {
-                // Pronadji tip korisnika
-                char *ptr = strstr(linija, "Tip: ");
-                if (ptr != NULL) {
-                    ptr += 5; // preskoci "Tip: "
-                    int i = 0;
-                    while (ptr[i] != '|' && ptr[i] != '\n' && i < 19) {
-                        role[i] = ptr[i];
-                        i++;
-                    }
-                    role[i] = '\0';
+                // Ekstrakcija tipa korisnika
+                char *p = strstr(linija, "Tip: ");
+                if (p) {
+                    p += 5; // preskoci "Tip: "
+                    char *kraj = strchr(p, '|');
+                    if (kraj) *kraj = '\0'; // prekini string na |
+                    trim(p);               // ukloni razmake sa pocetka i kraja
+                    strcpy(role, p);
                 } else {
                     strcpy(role, "Nepoznata");
                 }
