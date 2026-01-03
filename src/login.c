@@ -3,7 +3,8 @@
 #include "login.h"
 
 // Funkcija koja uklanja vodece i pratece razmake iz stringa
-void trim(char *str) {
+void trim(char *str) 
+{
     int i;
     // ukloni trailing spaces
     i = strlen(str) - 1;
@@ -17,8 +18,9 @@ void trim(char *str) {
     }
 }
 
-int prijavaKorisnika(char role[20]) {
-    char email[50], lozinka[50], linija[300];
+int prijavaKorisnika(char role[20]) 
+{
+    char email[50], lozinka[50], linija[500];
     FILE *f;
     int pokusaji = 0;
     int uspjesno = 0;
@@ -43,6 +45,26 @@ int prijavaKorisnika(char role[20]) {
         while (fgets(linija, sizeof(linija), f)) {
             // Provjera emaila i lozinke
             if (strstr(linija, email) && strstr(linija, lozinka)) {
+                // Provjera statusa
+                char *statusP = strstr(linija, "Status:");
+                if (statusP) {
+                    statusP += 7; // preskoci "Status:"
+                    char *kraj = strchr(statusP, '|'); 
+                    char status[20];
+                    if (kraj) {
+                        *kraj = '\0';
+                        strcpy(status, statusP);
+                    } else {
+                        strcpy(status, statusP);
+                    }
+                    trim(status);
+                    if (strcmp(status, "blokiran") == 0) {
+                        printf("Nalog je blokiran. Prijava nije moguca.\n");
+                        uspjesno = 0;
+                        break;
+                    }
+                }
+
                 // Ekstrakcija tipa korisnika
                 char *p = strstr(linija, "Tip: ");
                 if (p) {
@@ -54,6 +76,7 @@ int prijavaKorisnika(char role[20]) {
                 } else {
                     strcpy(role, "Nepoznata");
                 }
+
                 uspjesno = 1;
                 break;
             }
