@@ -4,5 +4,6 @@
 void registracijaKorisnika();
 void blokirajKorisnika();
 void adminMeni();
+void obrisiKorisnika();
 
 #endif

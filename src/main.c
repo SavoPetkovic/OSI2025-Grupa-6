@@ -9,10 +9,8 @@ int main() {
     if (prijavaKorisnika(uloga)) {
         printf("\nDobrodosli! Pristup funkcionalnostima sistema za ulogu: %s\n", uloga);
 
-        // Pozivanje registracije samo za admina
         if (strcmp(uloga, "admin") == 0) {
-            adminMeni();
-        } else {
+            adminMeni();  
             printf("Ostale funkcionalnosti ce biti implementirane kasnije.\n");
         }
     } else {
@@ -21,3 +19,4 @@ int main() {
 
     return 0;
 }
+
