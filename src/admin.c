@@ -20,7 +20,7 @@ void blokirajKorisnika()
 
     printf("Unesite email korisnika za blokiranje: ");
     scanf("%49s", email);
-    getchar(); // cisti buffer
+    getchar(); 
 
     printf("Unesite razlog blokiranja: ");
     fgets(razlog, sizeof(razlog), stdin);
@@ -34,7 +34,7 @@ void blokirajKorisnika()
                 printf("Nalog je vec blokiran.\n");
                 fputs(linija, temp);
             } else {
-                // Parsiramo sve postojeće podatke
+                
                 char ime[50], prezime[50], tip[20], mail[50], lozinka[50];
                 char broj[20], adresa[100], datum[20];
 
@@ -42,7 +42,7 @@ void blokirajKorisnika()
                     "Ime: %49[^|]| Prezime: %49[^|]| Tip: %19[^|]| Email: %49[^|]| Lozinka: %49[^|]| Broj telefona: %19[^|]| Adresa: %99[^|]| Datum rodjenja: %19[^\n]",
                     ime, prezime, tip, mail, lozinka, broj, adresa, datum);
 
-                // Sastavljamo novu liniju sa statusom i razlogom
+               
                 char novaLinija[800];
                 sprintf(novaLinija,
                     "Ime: %s | Prezime: %s | Tip: %s | Email: %s | Lozinka: %s | Broj telefona: %s | Adresa: %s | Datum rodjenja: %s | Status: blokiran | Razlog: %s\n",
@@ -79,6 +79,7 @@ void adminMeni()
         printf("3. Brisanje korisnickog naloga\n");
         printf("4. Kreiranje predmeta\n");
         printf("5. Kreiranje odjeljenja\n");
+	printf("6. Pregled nastavnika\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -99,6 +100,9 @@ void adminMeni()
             case 5:
                 kreirajOdjeljenje();
                 break;
+	    case 6:
+    		pregledNastavnika();
+    		break;
             case 0:
                 printf("Izlaz iz admin menija.\n");
                 break;
@@ -121,14 +125,14 @@ void registracijaKorisnika(void)
 
     printf("=== Registracija korisnika ===\n");
 
-    // Unos imena i prezimena
+    
     printf("Unesite ime: ");
     scanf("%49s", ime);
 
     printf("Unesite prezime: ");
     scanf("%49s", prezime);
 
-    // Unos tipa korisnika
+    
     do {
         printf("Unesite tip korisnika (ucenik/roditelj/nastavnik/admin): ");
         scanf("%19s", tip);
@@ -138,7 +142,7 @@ void registracijaKorisnika(void)
     } while (strcmp(tip,"ucenik") !=0 && strcmp(tip,"roditelj") !=0 &&
              strcmp(tip,"nastavnik") !=0 && strcmp(tip,"admin") !=0);
 
-    // Unos email-a i provjera da li vec postoji
+    
     do {
         printf("Unesite email: ");
         scanf("%49s", email);
@@ -166,7 +170,7 @@ void registracijaKorisnika(void)
         }
     } while (vecPostoji);
 
-    // Unos ostalih podataka
+    
     printf("Unesite broj telefona: ");
     scanf("%19s", brojTelefona);
 
@@ -176,7 +180,7 @@ void registracijaKorisnika(void)
     printf("Unesite datum rodjenja (dd.mm.yyyy): ");
     scanf("%14s", datumRodjenja);
 
-    // Unos lozinke i potvrda
+    
     do {
         printf("Unesite lozinku: ");
         scanf("%49s", lozinka);
@@ -189,7 +193,7 @@ void registracijaKorisnika(void)
         }
     } while (strcmp(lozinka, lozinka2) != 0);
 
-    // Prikaz podataka i potvrda registracije
+    
     printf("\nUneseni podaci:\nIme: %s\nPrezime: %s\nTip: %s\nEmail: %s\nBroj telefona: %s\nAdresa: %s\nDatum rodjenja: %s\n",
            ime, prezime, tip, email, brojTelefona, adresa, datumRodjenja);
 
@@ -272,6 +276,7 @@ void kreirajPredmet()
     FILE *f;
     char naziv[50], sifra[20], nastavnik[50];
     int razred, brojCasova;
+    char emailNastavnika[50];
     char linija[300];
     int postoji = 0;
     char potvrda;
@@ -281,7 +286,7 @@ void kreirajPredmet()
     printf("Unesite naziv predmeta: ");
     scanf(" %[^\n]%*c", naziv);
 
-    // Provjera da li predmet sa istim nazivom vec postoji
+    
     f = fopen("predmeti.txt", "r");
     if (f != NULL) {
         while (fgets(linija, sizeof(linija), f)) {
@@ -310,10 +315,14 @@ void kreirajPredmet()
     printf("Unesite ime nastavnika: ");
     scanf(" %[^\n]%*c", nastavnik);
 
+    printf("Unesite email nastavnika: ");
+    scanf("%49s", emailNastavnika);
+
+
     // Potvrda
     printf("\nUneseni podaci:\n");
-    printf("Naziv: %s\nSifra: %s\nRazred: %d\nBroj casova: %d\nNastavnik: %s\n",
-           naziv, sifra, razred, brojCasova, nastavnik);
+    printf("Naziv: %s\nSifra: %s\nRazred: %d\nBroj casova: %d\nNastavnik: %s\nEmail: %s\n",
+           naziv, sifra, razred, brojCasova, nastavnik,emailNastavnika);
 
     printf("Potvrdite kreiranje predmeta (Y/N): ");
     scanf(" %c", &potvrda);
@@ -331,8 +340,9 @@ void kreirajPredmet()
     }
 
     fprintf(f,
-        "Naziv: %s | Sifra: %s | Razred: %d | BrojCasova: %d | Nastavnik: %s\n",
-        naziv, sifra, razred, brojCasova, nastavnik);
+    "Naziv: %s | Sifra: %s | Razred: %d | BrojCasova: %d | Nastavnik: %s | Email: %s\n",
+     naziv, sifra, razred, brojCasova, nastavnik, emailNastavnika);
+
 
     fclose(f);
 
@@ -361,12 +371,12 @@ void kreirajOdjeljenje()
     printf("Unesite ime razrednog starjesine: ");
     scanf(" %[^\n]%*c", razredni);
 
-    /* Provjere */
+    
     f = fopen("odjeljenja.txt", "r");
     if (f != NULL) {
         while (fgets(linija, sizeof(linija), f)) {
 
-            /* Provjera da li isto odjeljenje vec postoji */
+          
             if (strstr(linija, oznaka) &&
                 strstr(linija, skolskaGodina)) {
 
@@ -378,7 +388,7 @@ void kreirajOdjeljenje()
                 }
             }
 
-            /* Provjera da li je nastavnik vec razredni */
+       
             if (strstr(linija, razredni)) {
                 zauzetRazrednik = 1;
             }
@@ -396,7 +406,7 @@ void kreirajOdjeljenje()
         return;
     }
 
-    /* Potvrda */
+   
     printf("\nUneseni podaci:\n");
     printf("Razred: %d\n", razred);
     printf("Oznaka: %s\n", oznaka);
@@ -425,5 +435,82 @@ void kreirajOdjeljenje()
     fclose(f);
 
     printf("Odjeljenje uspjesno kreirano!\n");
+}
+
+void pregledNastavnika()
+{
+    FILE *f;
+    char linija[600];
+    char izborEmail[50];
+    int imaNastavnika = 0;
+
+    printf("\n=== PREGLED NASTAVNIKA ===\n");
+
+    f = fopen("korisnici.txt", "r");
+    if (!f) {
+        printf("Greska pri otvaranju korisnici.txt\n");
+        return;
+    }
+
+    printf("\nLista nastavnika:\n");
+    while (fgets(linija, sizeof(linija), f)) {
+        if (strstr(linija, "Tip: nastavnik")) {
+            char ime[50], prezime[50], email[50];
+            sscanf(linija,
+                "Ime: %49[^|]| Prezime: %49[^|]| Tip: %*[^|]| Email: %49[^|]",
+                ime, prezime, email);
+
+            printf("- %s %s | Email: %s\n", ime, prezime, email);
+            imaNastavnika = 1;
+        }
+    }
+    fclose(f);
+
+    if (!imaNastavnika) {
+        printf("Nema registrovanih nastavnika.\n");
+        return;
+    }
+
+    printf("\nUnesite email nastavnika za pregled: ");
+    scanf("%49s", izborEmail);
+
+   	f = fopen("predmeti.txt", "r");
+		if (!f) {
+   		printf("Greska pri otvaranju predmeti.txt\n");
+   	 	return;
+	}
+
+	printf("\nPredmeti koje nastavnik predaje:\n");
+	int imaPredmeta = 0;
+
+	while (fgets(linija, sizeof(linija), f)) 
+	{
+    		if (strstr(linija, izborEmail)) 
+		{
+        	printf("- %s", linija);
+        	imaPredmeta = 1;
+    		}
+	}
+    fclose(f);
+
+    if (!imaPredmeta) {
+        printf("Nema predmeta za ovog nastavnika.\n");
+    }
+
+	// NIJE JOS IMPLEMENTIRAN RASPORED JER NIJE URADJENA zahtjev iz specifikacije br. 9 (Pregled rasporeda časova )
+    printf("\nOpcije:\n");
+    printf("1. Prikaz sedmicnog rasporeda (nije implementirano)\n");
+    printf("2. Izmjena rasporeda (nije implementirano)\n");
+    printf("0. Povratak u admin meni\n");
+
+    int izbor;
+    printf("Izbor: ");
+    scanf("%d", &izbor);
+
+    if (izbor == 1) {
+        printf("Sedmicni raspored ce biti implementiran kasnije.\n");
+    } else if (izbor == 2) {
+        printf("Izmjena rasporeda je dodatna funkcionalnost.\n");
+    }
 }
 

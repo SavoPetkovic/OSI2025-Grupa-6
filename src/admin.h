@@ -7,5 +7,9 @@ void adminMeni();
 void obrisiKorisnika();
 void kreirajPredmet();
 void kreirajOdjeljenje();
+void pregledNastavnika();
+
+
+
 
 #endif
