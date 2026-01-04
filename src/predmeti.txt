@@ -1,1 +1,3 @@
-Naziv: Matematika | Sifra: 12 | Razred: 4 | BrojCasova: 6 | Nastavnik: marija
+Naziv: Matematika | Sifra: 1 | Razred: 4 | BrojCasova: 6 | Nastavnik: Savo | Email: savo1@gmail.com
+Naziv: Informatika | Sifra: 2 | Razred: 4 | BrojCasova: 5 | Nastavnik: Savo | Email: savo1@gmail.com
+Naziv: Matematika | Sifra: 3 | Razred: 1 | BrojCasova: 6 | Nastavnik: Nikola | Email: nikola@gmail.com
