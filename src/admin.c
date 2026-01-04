@@ -76,7 +76,6 @@ void adminMeni()
         printf("\n=== ADMIN MENI ===\n");
         printf("1. Registracija korisnika\n");
         printf("2. Blokiranje korisnika\n");
-        printf("3. Brisanje korisnickog naloga\n");   // 👈 NOVA OPCIJA
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -88,9 +87,6 @@ void adminMeni()
             case 2:
                 blokirajKorisnika();
                 break;
-            case 3:
-                obrisiKorisnika();   // 👈 POZIV NOVE FUNKCIJE
-                break;
             case 0:
                 printf("Izlaz iz admin menija.\n");
                 break;
@@ -99,7 +95,6 @@ void adminMeni()
         }
     } while (izbor != 0);
 }
-
 
 
 void registracijaKorisnika(void) 
@@ -205,57 +200,4 @@ void registracijaKorisnika(void)
     fclose(f);
 
     printf("Korisnik uspjesno registrovan!\n");
-}
-
-void obrisiKorisnika()
-{
-    FILE *f = fopen("korisnici.txt", "r");
-    FILE *temp = fopen("temp.txt", "w");
-    FILE *arhiva = fopen("arhiva_obrisanih.txt", "a");
-
-    if (!f || !temp || !arhiva) {
-        printf("Greska pri radu sa fajlovima.\n");
-        return;
-    }
-
-    char email[50];
-    char linija[600];
-    char potvrda;
-    int pronadjen = 0;
-
-    printf("Unesite email korisnika za brisanje: ");
-    scanf("%49s", email);
-
-    while (fgets(linija, sizeof(linija), f)) {
-        if (strstr(linija, email)) {
-            pronadjen = 1;
-
-            printf("Pronadjen korisnik:\n%s", linija);
-            printf("Da li ste sigurni da zelite trajno obrisati ovaj nalog? (Y/N): ");
-            scanf(" %c", &potvrda);
-
-            if (potvrda == 'Y' || potvrda == 'y') {
-                // Arhiviranje obrisanog korisnika
-                fprintf(arhiva, "%s", linija);
-                printf("Korisnicki nalog uspjesno obrisan i arhiviran.\n");
-            } else {
-                // Ako administrator odustane, korisnik ostaje
-                fputs(linija, temp);
-                printf("Brisanje otkazano.\n");
-            }
-        } else {
-            fputs(linija, temp);
-        }
-    }
-
-    fclose(f);
-    fclose(temp);
-    fclose(arhiva);
-
-    remove("korisnici.txt");
-    rename("temp.txt", "korisnici.txt");
-
-    if (!pronadjen) {
-        printf("Korisnicki nalog nije pronadjen ili je vec obrisan.\n");
-    }
 }

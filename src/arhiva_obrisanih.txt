@@ -1,1 +1,0 @@
-Ime: Savo  | Prezime: Petkovic  | Tip: ucenik  | Email: savo@gmail.com  | Lozinka: sifra123  | Broj telefona: 065493042  | Adresa: Karadjordjeva LF2  | Datum rodjenja: 18.12.2004 | Status: blokiran | Razlog: tttt
