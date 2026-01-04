@@ -5,5 +5,6 @@ void registracijaKorisnika();
 void blokirajKorisnika();
 void adminMeni();
 void obrisiKorisnika();
+void kreirajPredmet();
 
 #endif

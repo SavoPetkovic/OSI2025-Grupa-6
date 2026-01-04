@@ -76,7 +76,8 @@ void adminMeni()
         printf("\n=== ADMIN MENI ===\n");
         printf("1. Registracija korisnika\n");
         printf("2. Blokiranje korisnika\n");
-        printf("3. Brisanje korisnickog naloga\n");   // 👈 NOVA OPCIJA
+        printf("3. Brisanje korisnickog naloga\n"); 
+        printf("4. Kreiranje predmeta\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -89,7 +90,10 @@ void adminMeni()
                 blokirajKorisnika();
                 break;
             case 3:
-                obrisiKorisnika();   // 👈 POZIV NOVE FUNKCIJE
+                obrisiKorisnika();   
+                break;
+            case 4:
+                kreirajPredmet();   
                 break;
             case 0:
                 printf("Izlaz iz admin menija.\n");
@@ -258,4 +262,75 @@ void obrisiKorisnika()
     if (!pronadjen) {
         printf("Korisnicki nalog nije pronadjen ili je vec obrisan.\n");
     }
+}
+void kreirajPredmet()
+{
+    FILE *f;
+    char naziv[50], sifra[20], nastavnik[50];
+    int razred, brojCasova;
+    char linija[300];
+    int postoji = 0;
+    char potvrda;
+
+    printf("=== Kreiranje novog predmeta ===\n");
+
+    printf("Unesite naziv predmeta: ");
+    scanf(" %[^\n]%*c", naziv);
+
+    // Provjera da li predmet sa istim nazivom vec postoji
+    f = fopen("predmeti.txt", "r");
+    if (f != NULL) {
+        while (fgets(linija, sizeof(linija), f)) {
+            if (strstr(linija, naziv)) {
+                postoji = 1;
+                break;
+            }
+        }
+        fclose(f);
+    }
+
+    if (postoji) {
+        printf("Predmet sa ovim nazivom vec postoji!\n");
+        return;
+    }
+
+    printf("Unesite sifru predmeta: ");
+    scanf("%19s", sifra);
+
+    printf("Unesite razred: ");
+    scanf("%d", &razred);
+
+    printf("Unesite broj casova sedmicno: ");
+    scanf("%d", &brojCasova);
+
+    printf("Unesite ime nastavnika: ");
+    scanf(" %[^\n]%*c", nastavnik);
+
+    // Potvrda
+    printf("\nUneseni podaci:\n");
+    printf("Naziv: %s\nSifra: %s\nRazred: %d\nBroj casova: %d\nNastavnik: %s\n",
+           naziv, sifra, razred, brojCasova, nastavnik);
+
+    printf("Potvrdite kreiranje predmeta (Y/N): ");
+    scanf(" %c", &potvrda);
+
+    if (potvrda != 'Y' && potvrda != 'y') {
+        printf("Kreiranje predmeta otkazano.\n");
+        return;
+    }
+
+    // Upis u fajl
+    f = fopen("predmeti.txt", "a");
+    if (f == NULL) {
+        printf("Greska pri otvaranju fajla predmeti.txt\n");
+        return;
+    }
+
+    fprintf(f,
+        "Naziv: %s | Sifra: %s | Razred: %d | BrojCasova: %d | Nastavnik: %s\n",
+        naziv, sifra, razred, brojCasova, nastavnik);
+
+    fclose(f);
+
+    printf("Predmet uspjesno kreiran!\n");
 }
