@@ -76,8 +76,9 @@ void adminMeni()
         printf("\n=== ADMIN MENI ===\n");
         printf("1. Registracija korisnika\n");
         printf("2. Blokiranje korisnika\n");
-        printf("3. Brisanje korisnickog naloga\n"); 
+        printf("3. Brisanje korisnickog naloga\n");
         printf("4. Kreiranje predmeta\n");
+        printf("5. Kreiranje odjeljenja\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -94,6 +95,9 @@ void adminMeni()
                 break;
             case 4:
                 kreirajPredmet();   
+                break;
+            case 5:
+                kreirajOdjeljenje();
                 break;
             case 0:
                 printf("Izlaz iz admin menija.\n");
@@ -334,3 +338,92 @@ void kreirajPredmet()
 
     printf("Predmet uspjesno kreiran!\n");
 }
+void kreirajOdjeljenje()
+{
+    FILE *f;
+    char oznaka[10], skolskaGodina[20], razredni[50];
+    int razred;
+    char linija[300];
+    int postoji = 0, zauzetRazrednik = 0;
+    char potvrda;
+
+    printf("=== Kreiranje novog odjeljenja ===\n");
+
+    printf("Unesite razred (npr. 1, 2, 3...): ");
+    scanf("%d", &razred);
+
+    printf("Unesite oznaku odjeljenja (npr. A, B): ");
+    scanf("%9s", oznaka);
+
+    printf("Unesite skolsku godinu (npr. 2024/2025): ");
+    scanf("%19s", skolskaGodina);
+
+    printf("Unesite ime razrednog starjesine: ");
+    scanf(" %[^\n]%*c", razredni);
+
+    /* Provjere */
+    f = fopen("odjeljenja.txt", "r");
+    if (f != NULL) {
+        while (fgets(linija, sizeof(linija), f)) {
+
+            /* Provjera da li isto odjeljenje vec postoji */
+            if (strstr(linija, oznaka) &&
+                strstr(linija, skolskaGodina)) {
+
+                int r;
+                sscanf(linija, "Razred: %d", &r);
+                if (r == razred) {
+                    postoji = 1;
+                    break;
+                }
+            }
+
+            /* Provjera da li je nastavnik vec razredni */
+            if (strstr(linija, razredni)) {
+                zauzetRazrednik = 1;
+            }
+        }
+        fclose(f);
+    }
+
+    if (postoji) {
+        printf("Greska: Ovo odjeljenje vec postoji!\n");
+        return;
+    }
+
+    if (zauzetRazrednik) {
+        printf("Greska: Nastavnik je vec razredni starjesina drugog odjeljenja!\n");
+        return;
+    }
+
+    /* Potvrda */
+    printf("\nUneseni podaci:\n");
+    printf("Razred: %d\n", razred);
+    printf("Oznaka: %s\n", oznaka);
+    printf("Skolska godina: %s\n", skolskaGodina);
+    printf("Razredni starjesina: %s\n", razredni);
+
+    printf("Potvrdite kreiranje odjeljenja (Y/N): ");
+    scanf(" %c", &potvrda);
+
+    if (potvrda != 'Y' && potvrda != 'y') {
+        printf("Kreiranje odjeljenja otkazano.\n");
+        return;
+    }
+
+    /* Upis u fajl */
+    f = fopen("odjeljenja.txt", "a");
+    if (f == NULL) {
+        printf("Greska pri otvaranju fajla odjeljenja.txt\n");
+        return;
+    }
+
+    fprintf(f,
+        "Razred: %d | Oznaka: %s | Skolska godina: %s | Razredni starjesina: %s\n",
+        razred, oznaka, skolskaGodina, razredni);
+
+    fclose(f);
+
+    printf("Odjeljenje uspjesno kreirano!\n");
+}
+

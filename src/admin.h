@@ -6,5 +6,6 @@ void blokirajKorisnika();
 void adminMeni();
 void obrisiKorisnika();
 void kreirajPredmet();
+void kreirajOdjeljenje();
 
 #endif
