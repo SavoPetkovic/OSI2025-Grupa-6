@@ -79,7 +79,8 @@ void adminMeni()
         printf("3. Brisanje korisnickog naloga\n");
         printf("4. Kreiranje predmeta\n");
         printf("5. Kreiranje odjeljenja\n");
-	printf("6. Pregled nastavnika\n");
+	    printf("6. Pregled nastavnika\n");
+        printf("7. Definisanje vrsta ocjena\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -100,12 +101,15 @@ void adminMeni()
             case 5:
                 kreirajOdjeljenje();
                 break;
-	    case 6:
-    		pregledNastavnika();
-    		break;
+	        case 6:
+    		    pregledNastavnika();
+    		    break;
+            case 7:
+                definisanjeVrstaOcjena();
+            break;
             case 0:
                 printf("Izlaz iz admin menija.\n");
-                break;
+            break;
             default:
                 printf("Nepoznata opcija.\n");
         }
@@ -436,7 +440,148 @@ void kreirajOdjeljenje()
 
     printf("Odjeljenje uspjesno kreirano!\n");
 }
+void definisanjeVrstaOcjena()
+{
+    FILE *f;
+    char linija[100];
+    char izbor;
+    char naziv[50];
+    int postoji;
 
+    do {
+        printf("\n=== DEFINISANJE VRSTA OCJENA ===\n");
+
+        // Prikaz postojećih vrsta ocjena
+        f = fopen("vrste_ocjena.txt", "r");
+        if (f != NULL) {
+            printf("\nPostojece vrste ocjena:\n");
+            while (fgets(linija, sizeof(linija), f)) {
+                printf("- %s", linija);
+            }
+            fclose(f);
+        } else {
+            printf("Nema definisanih vrsta ocjena.\n");
+        }
+
+        printf("\nOpcije:\n");
+        printf("1. Dodaj novu vrstu ocjene\n");
+        printf("2. Izmijeni postojecu vrstu ocjene\n");
+        printf("3. Obrisi vrstu ocjene\n");
+        printf("0. Povratak u admin meni\n");
+        printf("Izbor: ");
+        scanf(" %c", &izbor);
+        getchar(); // uklanja \n sa ulaznog bafera
+
+        if (izbor == '1') {
+            // Dodavanje nove vrste ocjene
+            printf("Unesite naziv nove vrste ocjene: ");
+            fgets(naziv, sizeof(naziv), stdin);
+            naziv[strcspn(naziv, "\n")] = 0;
+
+            // Provjera da li vec postoji
+            postoji = 0;
+            f = fopen("vrste_ocjena.txt", "r");
+            if (f != NULL) {
+                while (fgets(linija, sizeof(linija), f)) {
+                    linija[strcspn(linija, "\n")] = 0;
+                    if (strcmp(linija, naziv) == 0) {
+                        postoji = 1;
+                        break;
+                    }
+                }
+                fclose(f);
+            }
+
+            if (postoji) {
+                printf("Ova vrsta ocjene vec postoji!\n");
+            } else {
+                f = fopen("vrste_ocjena.txt", "a");
+                if (f != NULL) {
+                    fprintf(f, "%s\n", naziv);
+                    fclose(f);
+                    printf("Vrsta ocjene uspjesno dodana!\n");
+                } else {
+                    printf("Greska pri otvaranju fajla vrste_ocjena.txt\n");
+                }
+            }
+        }
+        else if (izbor == '2') {
+            // Izmjena postojeće vrste ocjene
+            char stariNaziv[50], noviNaziv[50];
+            printf("Unesite naziv vrste ocjene koju zelite izmijeniti: ");
+            fgets(stariNaziv, sizeof(stariNaziv), stdin);
+            stariNaziv[strcspn(stariNaziv, "\n")] = 0;
+
+            f = fopen("vrste_ocjena.txt", "r");
+            FILE *temp = fopen("temp.txt", "w");
+            int pronadjen = 0;
+
+            if (f == NULL || temp == NULL) {
+                printf("Greska pri radu sa fajlovima.\n");
+            } else {
+                while (fgets(linija, sizeof(linija), f)) {
+                    linija[strcspn(linija, "\n")] = 0;
+                    if (strcmp(linija, stariNaziv) == 0) {
+                        pronadjen = 1;
+                        printf("Unesite novi naziv za ovu vrstu ocjene: ");
+                        fgets(noviNaziv, sizeof(noviNaziv), stdin);
+                        noviNaziv[strcspn(noviNaziv, "\n")] = 0;
+                        fprintf(temp, "%s\n", noviNaziv);
+                    } else {
+                        fprintf(temp, "%s\n", linija);
+                    }
+                }
+                fclose(f);
+                fclose(temp);
+
+                if (pronadjen) {
+                    remove("vrste_ocjena.txt");
+                    rename("temp.txt", "vrste_ocjena.txt");
+                    printf("Vrsta ocjene uspjesno izmijenjena.\n");
+                } else {
+                    remove("temp.txt");
+                    printf("Vrsta ocjene nije pronadjena.\n");
+                }
+            }
+        }
+        else if (izbor == '3') {
+            // Brisanje vrste ocjene
+            char brisiNaziv[50];
+            printf("Unesite naziv vrste ocjene koju zelite obrisati: ");
+            fgets(brisiNaziv, sizeof(brisiNaziv), stdin);
+            brisiNaziv[strcspn(brisiNaziv, "\n")] = 0;
+
+            f = fopen("vrste_ocjena.txt", "r");
+            FILE *temp = fopen("temp.txt", "w");
+            int pronadjen = 0;
+
+            if (f == NULL || temp == NULL) {
+                printf("Greska pri radu sa fajlovima.\n");
+            } else {
+                while (fgets(linija, sizeof(linija), f)) {
+                    linija[strcspn(linija, "\n")] = 0;
+                    if (strcmp(linija, brisiNaziv) == 0) {
+                        pronadjen = 1;
+                        continue; // preskoci ovu liniju
+                    }
+                    fprintf(temp, "%s\n", linija);
+                }
+                fclose(f);
+                fclose(temp);
+
+                if (pronadjen) {
+                    remove("vrste_ocjena.txt");
+                    rename("temp.txt", "vrste_ocjena.txt");
+                    printf("Vrsta ocjene uspjesno obrisana.\n");
+                } else {
+                    remove("temp.txt");
+                    printf("Vrsta ocjene nije pronadjena.\n");
+                }
+            }
+        }
+
+    } while (izbor != '0');
+}
 void pregledNastavnika()
 {
     FILE *f;
