@@ -8,6 +8,7 @@ void obrisiKorisnika();
 void kreirajPredmet();
 void kreirajOdjeljenje();
 void pregledNastavnika();
+void definisanjeVrstaOcjena();
 
 
 
