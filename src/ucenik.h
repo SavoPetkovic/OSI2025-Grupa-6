@@ -3,5 +3,7 @@
 
 void ucenikMeni();
 void pregledIzostanakaUcenik();
+void pregledOcjenaUcenik();
+
 
 #endif
