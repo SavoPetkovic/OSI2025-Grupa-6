@@ -1,3 +1,5 @@
 Ime: Mico | Prezime: Petkovic | Tip: admin | Email: mico@gmail.com | Lozinka: comi123 | Broj telefona: 065493042 | Adresa: Teslic Karadjordjeva Lf2 | Datum rodjenja: 12.09.1968
 Ime: Savo | Prezime: Petkovic | Tip: nastavnik | Email: savo1@gmail.com | Lozinka: sifra | Broj telefona: 065493111 | Adresa: Teslic Karadjordjeva Lf2 | Datum rodjenja: 18.12.2004
 Ime: Marko | Prezime: Markovic | Tip: nastavnik | Email: marko2@gmail.com | Lozinka: marko | Broj telefona: 066230345 | Adresa: Kozarska Dubica 178 | Datum rodjenja: 01.01.1983
+Ime: Tamara | Prezime: Markovic | Tip: roditelj | Email: tamara@gmail.com | Lozinka: tamara123 | Broj telefona: 065123456 | Adresa: Bulevar Cara Dusana | Datum rodjenja: 12.5.1980.
+Ime: Petar | Prezime: Markovic | Tip: ucenik | Email: petar@gmail.com | Lozinka: petar12 | Broj telefona: 065789456 | Adresa: Bulevar Cara Dusana | Datum rodjenja: 26.7.2007.

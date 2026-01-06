@@ -2,6 +2,7 @@
 #include <string.h>
 #include "login.h"
 #include "roditelj.h"
+#include "ucenik.h"
 
 int main()
 {
@@ -9,11 +10,15 @@ int main()
 
     if (prijavaKorisnika(uloga)) {
 
-        if (strcmp(uloga, "roditelj") == 0)
+        if (strcmp(uloga, "roditelj") == 0){
             roditeljMeni();
-        //potrebno dodati funkcionalnosti za ucenika
-        else
+        }  
+        else if (strcmp(uloga, "ucenik") == 0) {
+            ucenikMeni();
+        }
+        else {
             printf("Nemate pristup ovom programu.\n");
+        }
     }
     return 0;
 }

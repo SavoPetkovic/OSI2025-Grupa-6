@@ -50,6 +50,7 @@ void nastavnikMeni()
         printf("1. Evidencija izostanka ucenika\n");
         printf("2. Unos opravdanja izostanka\n");
         printf("3. Zakljucivanje ocjene\n");
+        printf("4. Pregled izostanaka\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -63,6 +64,9 @@ void nastavnikMeni()
                 break;
             case 3:
                 zakljuciOcjenu();
+                break;
+            case 4:
+                pregledIzostanakaNastavnik();
                 break;
             case 0:
                 printf("Izlaz iz nastavnickog menija.\n");
@@ -251,4 +255,27 @@ void zakljuciOcjenu()
     fclose(fZakljucne);
 
     printf("Zakljucna ocjena je USPJESNO sacuvana.\n");
+}
+void pregledIzostanakaNastavnik()
+{
+    FILE* f = fopen("izostanci.txt", "r");
+    char linija[600];
+    int ima = 0;
+
+    printf("\n=== PREGLED IZOSTANAKA ===\n");
+
+    if (!f) {
+        printf("Nema zabiljezenih izostanaka.\n");
+        return;
+    }
+
+    while (fgets(linija, sizeof(linija), f)) {
+        printf("%s", linija);
+        ima = 1;
+    }
+
+    fclose(f);
+
+    if (!ima)
+        printf("Nema zabiljezenih izostanaka.\n");
 }
