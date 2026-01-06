@@ -4,5 +4,7 @@
 void nastavnikMeni();
 void evidentirajIzostanak();
 void unesiOpravdanje();
+void zakljuciOcjenu();
+
 
 #endif
