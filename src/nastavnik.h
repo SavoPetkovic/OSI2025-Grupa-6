@@ -3,5 +3,6 @@
 
 void nastavnikMeni();
 void evidentirajIzostanak();
+void unesiOpravdanje();
 
 #endif

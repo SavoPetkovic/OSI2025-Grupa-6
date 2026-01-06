@@ -9,6 +9,8 @@ void kreirajPredmet();
 void kreirajOdjeljenje();
 void pregledNastavnika();
 void definisanjeVrstaOcjena();
+void pregledIzostanaka();
+
 
 
 

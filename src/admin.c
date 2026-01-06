@@ -79,44 +79,57 @@ void adminMeni()
         printf("3. Brisanje korisnickog naloga\n");
         printf("4. Kreiranje predmeta\n");
         printf("5. Kreiranje odjeljenja\n");
-	    printf("6. Pregled nastavnika\n");
+        printf("6. Pregled nastavnika\n");
         printf("7. Definisanje vrsta ocjena\n");
+        printf("8. Pregled izostanaka (read-only)\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
 
         switch (izbor) {
+
             case 1:
                 registracijaKorisnika();
                 break;
+
             case 2:
                 blokirajKorisnika();
                 break;
+
             case 3:
-                obrisiKorisnika();   
+                obrisiKorisnika();
                 break;
+
             case 4:
-                kreirajPredmet();   
+                kreirajPredmet();
                 break;
+
             case 5:
                 kreirajOdjeljenje();
                 break;
-	        case 6:
-    		    pregledNastavnika();
-    		    break;
+
+            case 6:
+                pregledNastavnika();
+                break;
+
             case 7:
                 definisanjeVrstaOcjena();
-            break;
+                break;
+
+            case 8:
+                pregledIzostanaka(); 
+                break;
+
             case 0:
                 printf("Izlaz iz admin menija.\n");
-            break;
+                break;
+
             default:
                 printf("Nepoznata opcija.\n");
         }
+
     } while (izbor != 0);
 }
-
-
 
 void registracijaKorisnika(void) 
 {
@@ -658,4 +671,23 @@ void pregledNastavnika()
         printf("Izmjena rasporeda je dodatna funkcionalnost.\n");
     }
 }
+void pregledIzostanaka()
+{
+    FILE *f = fopen("izostanci.txt", "r");
+    char linija[600];
+
+    printf("\n=== PREGLED IZOSTANAKA (ADMIN) ===\n");
+
+    if (!f) {
+        printf("Nema evidentiranih izostanaka.\n");
+        return;
+    }
+
+    while (fgets(linija, sizeof(linija), f)) {
+        printf("%s", linija);
+    }
+
+    fclose(f);
+}
+
 

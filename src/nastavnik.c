@@ -45,9 +45,10 @@ void evidentirajIzostanak()
 void nastavnikMeni()
 {
     int izbor;
-     do {
+    do {
         printf("\n=== NASTAVNIK MENI ===\n");
         printf("1. Evidencija izostanka ucenika\n");
+        printf("2. Unos opravdanja izostanka\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -56,6 +57,9 @@ void nastavnikMeni()
             case 1:
                 evidentirajIzostanak();
                 break;
+            case 2:
+                unesiOpravdanje();
+                break;
             case 0:
                 printf("Izlaz iz nastavnickog menija.\n");
                 break;
@@ -63,5 +67,70 @@ void nastavnikMeni()
                 printf("Nepoznata opcija.\n");
         }
     } while (izbor != 0);
+}
 
+
+void unesiOpravdanje()
+{
+    FILE *f = fopen("izostanci.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    if (!f || !temp) {
+        printf("Greska pri radu sa fajlovima.\n");
+        return;
+    }
+
+    char ime[50], prezime[50], datum[20];
+    char razlog[100], trajanje[50];
+    char linija[600];
+    int pronadjen = 0;
+
+    printf("\n=== UNOS OPRAVDANJA IZOSTANKA ===\n");
+
+    printf("Ime ucenika: ");
+    scanf("%49s", ime);
+
+    printf("Prezime ucenika: ");
+    scanf("%49s", prezime);
+
+    printf("Datum izostanka (dd.mm.yyyy): ");
+    scanf("%19s", datum);
+    getchar();
+
+    printf("Razlog izostanka: ");
+    fgets(razlog, sizeof(razlog), stdin);
+    razlog[strcspn(razlog, "\n")] = 0;
+
+    printf("Trajanje (npr. 2 dana): ");
+    fgets(trajanje, sizeof(trajanje), stdin);
+    trajanje[strcspn(trajanje, "\n")] = 0;
+
+    while (fgets(linija, sizeof(linija), f)) {
+
+        if (strstr(linija, ime) &&
+            strstr(linija, prezime) &&
+            strstr(linija, datum) &&
+            strstr(linija, "Status: neopravdan")) {
+
+            pronadjen = 1;
+
+            fprintf(temp,
+                "Ucenik: %s %s | Datum: %s | Status: opravdan | Razlog: %s | Trajanje: %s\n",
+                ime, prezime, datum, razlog, trajanje);
+        }
+        else {
+            fputs(linija, temp);
+        }
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    remove("izostanci.txt");
+    rename("temp.txt", "izostanci.txt");
+
+    if (pronadjen)
+        printf("Opravdanje je uspjesno uneseno.\n");
+    else
+        printf("Ne postoji neopravdan izostanak za unijete podatke.\n");
 }
