@@ -49,8 +49,9 @@ void nastavnikMeni()
         printf("\n=== NASTAVNIK MENI ===\n");
         printf("1. Evidencija izostanka ucenika\n");
         printf("2. Unos opravdanja izostanka\n");
-        printf("3. Zakljucivanje ocjene\n");
-        printf("4. Pregled izostanaka\n");
+        printf("3. Unos ocjena\n");
+        printf("4. Zakljucivanje ocjena\n");
+        printf("5. Pregled izostanaka\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -62,10 +63,15 @@ void nastavnikMeni()
             case 2:
                 unesiOpravdanje();
                 break;
-            case 3:
+           case 3:
+                unosOcjene();
+                break;
+
+           case 4:
                 zakljuciOcjenu();
                 break;
-            case 4:
+
+           case 5:
                 pregledIzostanakaNastavnik();
                 break;
             case 0:
@@ -278,4 +284,63 @@ void pregledIzostanakaNastavnik()
 
     if (!ima)
         printf("Nema zabiljezenih izostanaka.\n");
+}
+
+void unosOcjene()
+{
+    FILE *f;
+    char ime[50], prezime[50];
+    char odjeljenje[10];
+    char predmet[50];
+    char datum[20];
+    int ocjena;
+    char izbor;
+
+    printf("\n=== UNOS OCJENE ===\n");
+
+    printf("Ime ucenika: ");
+    scanf("%49s", ime);
+
+    printf("Prezime ucenika: ");
+    scanf("%49s", prezime);
+
+    printf("Odjeljenje (npr. 2A): ");
+    scanf("%9s", odjeljenje);
+
+    printf("Predmet: ");
+    scanf(" %[^\n]%*c", predmet);
+
+    do {
+        printf("Unesite ocjenu (1-5): ");
+        scanf("%d", &ocjena);
+
+        if (ocjena < 1 || ocjena > 5)
+            printf("Greska: dozvoljene ocjene su 1–5!\n");
+
+    } while (ocjena < 1 || ocjena > 5);
+
+    printf("Datum (dd.mm.yyyy): ");
+    scanf("%19s", datum);
+
+    printf("Potvrdite unos? (Y/N): ");
+    scanf(" %c", &izbor);
+
+    if (izbor != 'Y' && izbor != 'y') {
+        printf("Unos ocjene otkazan.\n");
+        return;
+    }
+
+    f = fopen("ocjene.txt", "a");
+    if (!f) {
+        printf("Greska pri upisu ocjene.\n");
+        return;
+    }
+
+    fprintf(f,
+        "Ime: %s | Prezime: %s | Odjeljenje: %s | Predmet: %s | Ocjena: %d | Datum: %s\n",
+        ime, prezime, odjeljenje, predmet, ocjena, datum);
+
+    fclose(f);
+
+    printf("Ocjena uspjesno sacuvana.\n");
 }
