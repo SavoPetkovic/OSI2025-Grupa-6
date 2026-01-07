@@ -2,6 +2,7 @@
 #include <string.h>
 #include "roditelj.h"
 #include "nastavnik.h" 
+#include "ucenik.h"
 
 void roditeljMeni()
 {
@@ -10,6 +11,7 @@ void roditeljMeni()
         printf("\n=== RODITELJ MENI ===\n");
         printf("1. Unos opravdanja izostanka\n");
         printf("2. Pregled izostanaka djeteta\n");
+        printf("3. Pregled ocjena djeteta\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -20,6 +22,9 @@ void roditeljMeni()
                 break;
             case 2:
                 pregledIzostanakaRoditelj();
+                break;
+            case 3:
+                pregledOcjenaDjeteta();
                 break;
             case 0:
                 printf("Izlaz iz roditeljskog menija.\n");
@@ -60,5 +65,49 @@ void pregledIzostanakaRoditelj()
 
     if (!ima)
         printf("Nema zabiljezenih izostanaka.\n");
+}
+
+void pregledOcjenaDjeteta()
+{
+    FILE* f = fopen("ocjene.txt", "r");
+    char ime[50], prezime[50];
+    char predmet[50];
+    char linija[200];
+    int pronadjeno = 0;
+
+    if (!f) {
+        printf("Fajl sa ocjenama ne postoji.\n");
+        return;
+    }
+
+
+    printf("\nIme djeteta: ");
+    scanf("%49s", ime);
+
+    printf("Prezime djeteta: ");
+    scanf("%49s", prezime);
+
+    
+    printf("Predmet: ");
+    scanf("%49s", predmet);
+
+    printf("\n=== OCJENE DJETETA (%s %s) ===\n", ime, prezime);
+    printf("Predmet: %s\n\n", predmet);
+
+
+    while (fgets(linija, sizeof(linija), f)) {
+        if (strstr(linija, ime) &&
+            strstr(linija, prezime) &&
+            strstr(linija, predmet)) {
+            printf("%s", linija);
+            pronadjeno = 1;
+        }
+    }
+
+    fclose(f);
+
+    if (!pronadjeno) {
+        printf("Nema zabiljezenih ocjena za izabrani predmet.\n");
+    }
 }
 

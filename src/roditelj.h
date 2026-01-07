@@ -3,5 +3,7 @@
 
 void roditeljMeni();
 void pregledIzostanakaRoditelj();
+void pregledOcjenaDjeteta();
+
 
 #endif
