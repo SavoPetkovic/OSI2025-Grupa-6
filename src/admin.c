@@ -82,6 +82,7 @@ void adminMeni()
         printf("6. Pregled nastavnika\n");
         printf("7. Definisanje vrsta ocjena\n");
         printf("8. Pregled izostanaka (read-only)\n");
+        printf("9. Pregled svih ocjena\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -119,11 +120,12 @@ void adminMeni()
             case 8:
                 pregledIzostanaka(); 
                 break;
-
+            case 9:
+                pregledSvihOcjena();
+                break;
             case 0:
                 printf("Izlaz iz admin menija.\n");
                 break;
-
             default:
                 printf("Nepoznata opcija.\n");
         }
@@ -689,5 +691,40 @@ void pregledIzostanaka()
 
     fclose(f);
 }
+void pregledSvihOcjena()
+{
+    FILE *focjene = fopen("ocjene.txt", "r");
+    if (!focjene) {
+        printf("Greska: ne mogu otvoriti ocjene.txt\n");
+        return;
+    }
 
+    char ime[50], prezime[50];
+    char linija[600];
+    int imaOcjena = 0;
 
+    printf("\n=== PREGLED SVIH OCJENA ===\n");
+
+    printf("Ime ucenika: ");
+    scanf("%49s", ime);
+
+    printf("Prezime ucenika: ");
+    scanf("%49s", prezime);
+
+    printf("\nOcjene za ucenika %s %s:\n", ime, prezime);
+    printf("---------------------------------------------\n");
+
+    while (fgets(linija, sizeof(linija), focjene)) {
+
+        if (strstr(linija, ime) && strstr(linija, prezime)) {
+            printf("%s", linija);
+            imaOcjena = 1;
+        }
+    }
+
+    if (!imaOcjena) {
+        printf("Nema evidentiranih ocjena za ovog ucenika.\n");
+    }
+
+    fclose(focjene);
+}
