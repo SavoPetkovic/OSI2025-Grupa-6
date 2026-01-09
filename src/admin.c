@@ -79,10 +79,11 @@ void adminMeni()
         printf("3. Brisanje korisnickog naloga\n");
         printf("4. Kreiranje predmeta\n");
         printf("5. Kreiranje odjeljenja\n");
-        printf("6. Pregled nastavnika\n");
-        printf("7. Definisanje vrsta ocjena\n");
-        printf("8. Pregled izostanaka (read-only)\n");
-        printf("9. Pregled svih ocjena\n");
+        printf("6. Dodavanje ucenika u odjeljenje\n");
+        printf("7. Pregled nastavnika\n");
+        printf("8. Definisanje vrsta ocjena\n");
+        printf("9. Pregled izostanaka (read-only)\n");
+        printf("10. Pregled svih ocjena\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -108,19 +109,22 @@ void adminMeni()
             case 5:
                 kreirajOdjeljenje();
                 break;
-
             case 6:
-                pregledNastavnika();
+                dodajUcenikaUOdjeljenje();
                 break;
 
             case 7:
-                definisanjeVrstaOcjena();
+                pregledNastavnika();
                 break;
 
             case 8:
+                definisanjeVrstaOcjena();
+                break;
+
+            case 9:
                 pregledIzostanaka(); 
                 break;
-            case 9:
+            case 10:
                 pregledSvihOcjena();
                 break;
             case 0:
@@ -455,6 +459,119 @@ void kreirajOdjeljenje()
 
     printf("Odjeljenje uspjesno kreirano!\n");
 }
+void dodajUcenikaUOdjeljenje()
+{
+    FILE *fKorisnici, *fOdjeljenja, *fVeza;
+    char ime[50], prezime[50], email[50];
+    char razred[5], oznaka[5];
+    char linija[300];
+    int postojiUcenik = 0, postojiOdjeljenje = 0, vecUBazi = 0;
+    char potvrda;
+
+    printf("\n=== DODAVANJE UCENIKA U ODJELJENJE ===\n");
+
+    
+    printf("Ime ucenika: ");
+    scanf("%49s", ime);
+
+    printf("Prezime ucenika: ");
+    scanf("%49s", prezime);
+
+    printf("Email ucenika: ");
+    scanf("%49s", email);
+
+    
+    fKorisnici = fopen("korisnici.txt", "r");
+    if (!fKorisnici) {
+        printf("Greska pri otvaranju korisnici.txt\n");
+        return;
+    }
+
+    while (fgets(linija, sizeof(linija), fKorisnici)) {
+        if (strstr(linija, "Tip: ucenik") && strstr(linija, email)) {
+            postojiUcenik = 1;
+            break;
+        }
+    }
+    fclose(fKorisnici);
+
+    if (!postojiUcenik) {
+        printf("Greska: Ucenik ne postoji u sistemu!\n");
+        return;
+    }
+
+    
+    printf("Razred (npr. 2): ");
+    scanf("%4s", razred);
+
+    printf("Oznaka odjeljenja (npr. A): ");
+    scanf("%4s", oznaka);
+
+    
+    fOdjeljenja = fopen("odjeljenja.txt", "r");
+    if (!fOdjeljenja) {
+        printf("Greska pri otvaranju odjeljenja.txt\n");
+        return;
+    }
+
+    while (fgets(linija, sizeof(linija), fOdjeljenja)) {
+        if (strstr(linija, razred) && strstr(linija, oznaka)) {
+            postojiOdjeljenje = 1;
+            break;
+        }
+    }
+    fclose(fOdjeljenja);
+
+    if (!postojiOdjeljenje) {
+        printf("Greska: Odjeljenje ne postoji!\n");
+        return;
+    }
+
+    
+    fVeza = fopen("ucenici_odjeljenja.txt", "r");
+    if (fVeza) {
+        while (fgets(linija, sizeof(linija), fVeza)) {
+            if (strstr(linija, email) &&
+                strstr(linija, razred) &&
+                strstr(linija, oznaka)) {
+                vecUBazi = 1;
+                break;
+            }
+        }
+        fclose(fVeza);
+    }
+
+    if (vecUBazi) {
+        printf("Ucenik je vec u ovom odjeljenju!\n");
+        return;
+    }
+
+    
+    printf("\nDodati ucenika %s %s u odjeljenje %s%s? (Y/N): ",
+           ime, prezime, razred, oznaka);
+    scanf(" %c", &potvrda);
+
+    if (potvrda != 'Y' && potvrda != 'y') {
+        printf("Proces prekinut.\n");
+        return;
+    }
+
+    /* Upis veze */
+    fVeza = fopen("ucenici_odjeljenja.txt", "a");
+    if (!fVeza) {
+        printf("Greska pri upisu u bazu.\n");
+        return;
+    }
+
+    fprintf(fVeza,
+        "Ucenik: %s %s | Email: %s | Odjeljenje: %s%s\n",
+        ime, prezime, email, razred, oznaka);
+
+    fclose(fVeza);
+
+    printf("Ucenik je USPJESNO dodat u odjeljenje!\n");
+}
+
 void definisanjeVrstaOcjena()
 {
     FILE *f;

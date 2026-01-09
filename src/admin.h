@@ -11,6 +11,8 @@ void pregledNastavnika();
 void definisanjeVrstaOcjena();
 void pregledIzostanaka();
 void pregledSvihOcjena();
+void dodajUcenikaUOdjeljenje();
+
 
 
 
