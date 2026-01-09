@@ -54,6 +54,7 @@ void nastavnikMeni()
         printf("4. Zakljucivanje ocjena\n");
         printf("5. Pregled izostanaka\n");
         printf("6. Pregled rasporeda casova\n");
+        printf("7. Pregled ocjena odjeljenja (razrednik)\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -79,6 +80,10 @@ void nastavnikMeni()
             case 6:
                 pregledRasporeda();
                 break;
+            case 7:
+                pregledOcjenaOdjeljenja();
+                 break;
+
 
             case 0:
                 printf("Izlaz iz nastavnickog menija.\n");
@@ -349,4 +354,140 @@ void unosOcjene()
     fclose(f);
 
     printf("Ocjena uspjesno sacuvana.\n");
+}
+void pregledOcjenaOdjeljenja()
+{
+    FILE *fOdjeljenja, *fUcenici, *fOcjene;
+    char linija[600];
+
+    char razrednikIme[50], razrednikPrezime[50];
+    char razred[5] = "", oznaka[5] = "";
+    int pronadjen = 0;
+
+    printf("\n=== PREGLED OCJENA ODJELJENJA (RAZREDNIK) ===\n");
+
+
+    printf("Unesite svoje ime: ");
+    scanf("%49s", razrednikIme);
+
+    printf("Unesite svoje prezime: ");
+    scanf("%49s", razrednikPrezime);
+
+    /* 2. Pronadji odjeljenje gdje je razrednik */
+    fOdjeljenja = fopen("odjeljenja.txt", "r");
+    if (!fOdjeljenja) {
+        printf("Greska: ne mogu otvoriti odjeljenja.txt\n");
+        return;
+    }
+
+    while (fgets(linija, sizeof(linija), fOdjeljenja)) {
+        if (strstr(linija, razrednikIme) && strstr(linija, razrednikPrezime)) {
+            sscanf(linija,
+                "Razred: %4[^|]| Oznaka: %4[^|]",
+                razred, oznaka);
+            pronadjen = 1;
+            break;
+        }
+    }
+    fclose(fOdjeljenja);
+
+    if (!pronadjen) {
+        printf("Vi niste razrednik nijednog odjeljenja.\n");
+        return;
+    }
+
+    char mojeOdjeljenje[10];
+    sprintf(mojeOdjeljenje, "%s%s", razred, oznaka);
+
+    printf("\nVase odjeljenje: %s\n", mojeOdjeljenje);
+
+    
+    fUcenici = fopen("ucenici_odjeljenja.txt", "r");
+    if (!fUcenici) {
+        printf("Nema ucenika u sistemu.\n");
+        return;
+    }
+
+    char ime[50], prezime[50], email[50], odjeljenje[10];
+    int imaUcenika = 0;
+
+    printf("\nUcenici u odjeljenju:\n");
+    while (fgets(linija, sizeof(linija), fUcenici)) {
+        sscanf(linija,
+            "Ucenik: %49s %49s | Email: %49[^|]| Odjeljenje: %9s",
+            ime, prezime, email, odjeljenje);
+
+        if (strcmp(odjeljenje, mojeOdjeljenje) == 0) {
+            printf("- %s %s\n", ime, prezime);
+            imaUcenika = 1;
+        }
+    }
+    fclose(fUcenici);
+
+    if (!imaUcenika) {
+        printf("Nema ucenika u ovom odjeljenju.\n");
+        return;
+    }
+
+    /* 4. Izbor ucenika */
+    printf("\nUnesite ime ucenika: ");
+    scanf("%49s", ime);
+
+    printf("Unesite prezime ucenika: ");
+    scanf("%49s", prezime);
+
+    /* 5. Prikaz predmeta */
+    fOcjene = fopen("ocjene.txt", "r");
+    if (!fOcjene) {
+        printf("Nema evidentiranih ocjena.\n"); 
+        return;
+    }
+
+    char predmet[50];
+    int imaPredmeta = 0;
+
+    printf("\nPredmeti:\n");
+    while (fgets(linija, sizeof(linija), fOcjene)) {
+        if (strstr(linija, ime) &&
+            strstr(linija, prezime) &&
+            strstr(linija, mojeOdjeljenje)) {
+
+            sscanf(linija,
+                "%*[^P]Predmet: %49[^|]",
+                predmet);
+            printf("- %s\n", predmet);
+            imaPredmeta = 1;
+        }
+    }
+    fclose(fOcjene);
+
+    if (!imaPredmeta) {
+        printf("Ucenik nema ocjena.\n");
+        return;
+    }
+
+    /* 6. Izbor predmeta */
+    printf("\nIzaberite predmet: ");
+    scanf(" %[^\n]%*c", predmet);
+
+    /* 7. Prikaz ocjena */
+    fOcjene = fopen("ocjene.txt", "r");
+    printf("\nOcjene iz predmeta %s:\n", predmet);
+
+    int imaOcjena = 0;
+    while (fgets(linija, sizeof(linija), fOcjene)) {
+        if (strstr(linija, ime) &&
+            strstr(linija, prezime) &&
+            strstr(linija, mojeOdjeljenje) &&
+            strstr(linija, predmet)) {
+
+            printf("%s", linija);
+            imaOcjena = 1;
+        }
+    }
+    fclose(fOcjene);
+
+    if (!imaOcjena) {
+        printf("Nema ocjena za izabrani predmet.\n");
+    }
 }

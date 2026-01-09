@@ -7,6 +7,8 @@ void unesiOpravdanje();
 void zakljuciOcjenu();
 void pregledIzostanakaNastavnik();
 void unosOcjene();
+void pregledOcjenaOdjeljenja();
+
 
 
 #endif
