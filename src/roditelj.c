@@ -3,6 +3,7 @@
 #include "roditelj.h"
 #include "nastavnik.h" 
 #include "ucenik.h"
+#include "raspored.h"
 
 void roditeljMeni()
 {
@@ -12,6 +13,7 @@ void roditeljMeni()
         printf("1. Unos opravdanja izostanka\n");
         printf("2. Pregled izostanaka djeteta\n");
         printf("3. Pregled ocjena djeteta\n");
+        printf("4. Pregled rasporeda casova\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -26,7 +28,10 @@ void roditeljMeni()
             case 3:
                 pregledOcjenaDjeteta();
                 break;
-            case 0:
+            case 4:
+                pregledRasporeda();
+                break;
+             case 0:
                 printf("Izlaz iz roditeljskog menija.\n");
                 break;
             default:

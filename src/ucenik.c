@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ucenik.h"
+#include "raspored.h"
 
 void pregledIzostanakaUcenik()
 {
@@ -135,6 +136,7 @@ void ucenikMeni()
         printf("\n=== UCENIK MENI ===\n");
         printf("1. Pregled mojih izostanaka\n");
         printf("2. Pregled mojih ocjena\n");
+        printf("3. Pregled rasporeda casova\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -146,6 +148,10 @@ void ucenikMeni()
             case 2:
                 pregledOcjenaUcenik();
                 break;
+            case 3:
+                pregledRasporeda();
+                break;
+
             case 0:
                 printf("Izlaz iz ucenickog menija.\n");
                 break;
