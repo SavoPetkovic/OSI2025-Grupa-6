@@ -1,0 +1,3 @@
+Razred: 2 | Oznaka: A | Sedmica: 1 | Ponedjeljak: Matematika, Srpski, Fizika | Utorak: Hemija, Likovno, Engleski
+Razred: 2 | Oznaka: A | Sedmica: 2 | Ponedjeljak: Biologija, Srpski, Matematika | Utorak: Fizika, Engleski, Likovno
+Razred: 3 | Oznaka: B | Sedmica: 1 | Ponedjeljak: Matematika, Hemija, Engleski

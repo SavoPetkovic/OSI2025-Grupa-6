@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "nastavnik.h"
+#include "raspored.h"
 
 void evidentirajIzostanak()
 {
@@ -52,6 +53,7 @@ void nastavnikMeni()
         printf("3. Unos ocjena\n");
         printf("4. Zakljucivanje ocjena\n");
         printf("5. Pregled izostanaka\n");
+        printf("6. Pregled rasporeda casova\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -74,6 +76,10 @@ void nastavnikMeni()
            case 5:
                 pregledIzostanakaNastavnik();
                 break;
+            case 6:
+                pregledRasporeda();
+                break;
+
             case 0:
                 printf("Izlaz iz nastavnickog menija.\n");
                 break;
