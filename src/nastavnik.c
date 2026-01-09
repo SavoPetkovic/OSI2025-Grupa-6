@@ -5,22 +5,54 @@
 
 void evidentirajIzostanak()
 {
-    FILE *f;
-    char ime[50], prezime[50];
-    char odjeljenje[10];
+    FILE *fUcenici, *fIzostanci;
+    char imena[100][50];
+    char prezimena[100][50];
+    char odjeljenjeInput[10];
     char predmet[50];
     char datum[20];
+    char linija[300];
+    int brojUcenika = 0;
 
     printf("\n=== EVIDENCIJA IZOSTANKA ===\n");
 
-    printf("Ime ucenika: ");
-    scanf("%49s", ime);
-
-    printf("Prezime ucenika: ");
-    scanf("%49s", prezime);
-
     printf("Odjeljenje (npr. 2A): ");
-    scanf("%9s", odjeljenje);
+    scanf("%9s", odjeljenjeInput);
+
+    fUcenici = fopen("ucenici_odjeljenja.txt","r");
+    if (!fUcenici) {
+        printf("Greska: ne mogu otvoriti ucenici_odjeljenja.txt\n");
+        return;
+    }
+    printf("\nUcenici u odjeljenju %s:\n", odjeljenjeInput);
+    while (fgets(linija, sizeof(linija), fUcenici)) {
+        char ime[50], prezime[50], email[50], odj[10];
+        if (sscanf(linija,
+               "Ucenik: %49s %49s | Email: %49s | Odjeljenje: %9s",
+               ime, prezime, email, odj) == 4)
+        {
+            
+            if (strcmp(odj, odjeljenjeInput) == 0)
+            {
+                strcpy(imena[brojUcenika], ime);
+                strcpy(prezimena[brojUcenika], prezime);
+                printf("%d. %s %s\n", brojUcenika + 1, ime, prezime);
+                brojUcenika++;
+            }
+        }
+    }
+    fclose(fUcenici);
+
+    if(brojUcenika == 0) {
+        printf("U odjeljenju nema registrovanih ucenika.\n");
+        return;
+    }
+
+    int izbor;
+    do {
+        printf("\nOdaberite ucenika (1-%d): ", brojUcenika);
+        scanf("%d", &izbor);
+    } while (izbor < 1 || izbor > brojUcenika);
 
     printf("Predmet: ");
     scanf(" %[^\n]%*c", predmet);
@@ -28,20 +60,20 @@ void evidentirajIzostanak()
     printf("Datum (dd.mm.yyyy): ");
     scanf("%19s", datum);
 
-    f = fopen("izostanci.txt","a");
-    if(!f) {
-        printf("Greska pri radu sa fajlom.\n");
+    fIzostanci = fopen("izostanci.txt","a");
+    if(!fIzostanci) {
+        printf("Greska pri otvaranju izostanci.txt.\n");
         return;
     }
 
-    fprintf(f,
+    fprintf(fIzostanci,
         "Ucenik: %s %s | Odjeljenje: %s | Predmet: %s | Datum: %s | Status: neopravdan\n",
-        ime, prezime, odjeljenje, predmet, datum);
+        imena, prezimena, odjeljenjeInput, predmet, datum);
 
-    fclose(f);
+    fclose(fIzostanci);
 
-    printf("Izostanak je evidentiran kao NEOPRAVDAN.\n");
-}
+    printf("\nIzostanak za učenika %s %s je evidentiran kao NEOPRAVDAN.\n",
+           imena[izbor - 1], prezimena[izbor - 1]);}
 
 void nastavnikMeni()
 {
