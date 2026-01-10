@@ -729,6 +729,7 @@ void definisanjeVrstaOcjena()
 
     } while (izbor != '0');
 }
+
 void pregledNastavnika()
 {
     FILE *f;
@@ -766,44 +767,29 @@ void pregledNastavnika()
     printf("\nUnesite email nastavnika za pregled: ");
     scanf("%49s", izborEmail);
 
-   	f = fopen("predmeti.txt", "r");
-		if (!f) {
-   		printf("Greska pri otvaranju predmeti.txt\n");
-   	 	return;
-	}
+    f = fopen("predmeti.txt", "r");
+    if (!f) {
+        printf("Greska pri otvaranju predmeti.txt\n");
+        return;
+    }
 
-	printf("\nPredmeti koje nastavnik predaje:\n");
-	int imaPredmeta = 0;
+    printf("\nPredmeti koje nastavnik predaje:\n");
+    int imaPredmeta = 0;
 
-	while (fgets(linija, sizeof(linija), f)) 
-	{
-    		if (strstr(linija, izborEmail)) 
-		{
-        	printf("- %s", linija);
-        	imaPredmeta = 1;
-    		}
-	}
+    while (fgets(linija, sizeof(linija), f)) {
+        if (strstr(linija, izborEmail)) {
+            printf("- %s", linija);
+            imaPredmeta = 1;
+        }
+    }
     fclose(f);
 
     if (!imaPredmeta) {
         printf("Nema predmeta za ovog nastavnika.\n");
     }
 
-	// NIJE JOS IMPLEMENTIRAN RASPORED JER NIJE URADJENA zahtjev iz specifikacije br. 9 (Pregled rasporeda časova )
-    printf("\nOpcije:\n");
-    printf("1. Prikaz sedmicnog rasporeda (nije implementirano)\n");
-    printf("2. Izmjena rasporeda (nije implementirano)\n");
-    printf("0. Povratak u admin meni\n");
-
-    int izbor;
-    printf("Izbor: ");
-    scanf("%d", &izbor);
-
-    if (izbor == 1) {
-        printf("Sedmicni raspored ce biti implementiran kasnije.\n");
-    } else if (izbor == 2) {
-        printf("Izmjena rasporeda je dodatna funkcionalnost.\n");
-    }
+    printf("\n--- Pregled sedmicnog rasporeda ---\n");
+    pregledRasporeda();
 }
 void pregledIzostanaka()
 {
