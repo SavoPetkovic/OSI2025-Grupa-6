@@ -1,0 +1,13 @@
+=== IZVJESTAJ O USPJEHU ODJELJENJA 2A ===
+
+Ucenik: Petar Markovic
+  Matematika : 5
+  Fizika : 4
+  Hemija : 3
+  Informatika : 2
+
+Ucenik: Milos Markovic
+  Informatika : 2
+  Informatika : 2
+  Informatika : 2
+

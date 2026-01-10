@@ -1,1 +1,7 @@
-Ucenik: Petar Markovic | Predmet: Matematika | Zakljucna: 2
+Ucenik: Petar Markovic | Predmet: Matematika | Zakljucna: 5
+Ucenik: Petar Markovic | Predmet: Fizika | Zakljucna: 4
+Ucenik: Petar Markovic | Predmet: Hemija | Zakljucna: 3
+Ucenik: Petar Markovic | Predmet: Informatika | Zakljucna: 2
+Ucenik: Milos Markovic | Predmet: Informatika | Zakljucna: 2
+Ucenik: Milos Markovic | Predmet: Informatika | Zakljucna: 2
+Ucenik: Milos Markovic | Predmet: Informatika | Zakljucna: 2

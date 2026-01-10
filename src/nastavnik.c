@@ -88,6 +88,7 @@ void nastavnikMeni()
         printf("6. Pregled rasporeda casova\n");
         printf("7. Pregled ocjena odjeljenja (razrednik)\n");
         printf("8. Generisanje izvjestaja o uspjehu ucenika\n");
+        printf("9. Generisanje izvjestaja o uspjehu odjeljenja\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -118,6 +119,9 @@ void nastavnikMeni()
                 break;
             case 8: 
                 generisanjeIzvjestajUspjehaUcenika(); 
+                break;
+            case 9:
+                generisanjeIzvjestajaUspjehaOdjeljenja();
                 break;
             case 0:
                 printf("Izlaz iz nastavnickog menija.\n");
@@ -591,4 +595,113 @@ void generisanjeIzvjestajUspjehaUcenika()
     fclose(fOut);
 
     printf("Izvjestaj generisan: %s\n", nazivFajla);
+}
+
+void generisanjeIzvjestajaUspjehaOdjeljenja()
+{
+    FILE *fUcenici, *fZakljucne, *fOut;
+    char odjeljenje[10];
+    char linija[600];
+
+    char imena[100][50];
+    char prezimena[100][50];
+    int brojUcenika = 0;
+
+    printf("\n=== GENERISANJE IZVJESTAJA O USPJEHU ODJELJENJA ===\n");
+    printf("Unesite odjeljenje (npr. 2A): ");
+    scanf("%9s", odjeljenje);
+
+    /* 1. Ucitavanje ucenika odjeljenja */
+    fUcenici = fopen("ucenici_odjeljenja.txt", "r");
+    if (!fUcenici) {
+        printf("Greska: ne mogu otvoriti ucenici_odjeljenja.txt\n");
+        return;
+    }
+
+    while (fgets(linija, sizeof(linija), fUcenici)) {
+        char ime[50], prezime[50], email[50], odj[10];
+
+        if (sscanf(linija,
+            "Ucenik: %49s %49s | Email: %49[^|]| Odjeljenje: %9s",
+            ime, prezime, email, odj) == 4)
+        {
+            if (strcmp(odj, odjeljenje) == 0) {
+                strcpy(imena[brojUcenika], ime);
+                strcpy(prezimena[brojUcenika], prezime);
+                brojUcenika++;
+            }
+        }
+    }
+    fclose(fUcenici);
+
+    if (brojUcenika == 0) {
+        printf("U odjeljenju nema ucenika.\n");
+        return;
+    }
+
+    /* 2. Provjera zakljucnih ocjena */
+    fZakljucne = fopen("zakljucne_ocjene.txt", "r");
+    if (!fZakljucne) {
+        printf("Ne postoje zakljucne ocjene u sistemu.\n");
+        return;
+    }
+
+    for (int i = 0; i < brojUcenika; i++) {
+        int ima = 0;
+        rewind(fZakljucne);
+
+        while (fgets(linija, sizeof(linija), fZakljucne)) {
+            if (strstr(linija, imena[i]) &&
+                strstr(linija, prezimena[i])) {
+                ima = 1;
+                break;
+            }
+        }
+
+        if (!ima) {
+            printf("Nisu zakljucene sve ocjene. Izvjestaj se ne moze generisati.\n");
+            fclose(fZakljucne);
+            return;
+        }
+    }
+
+    /* 3. Generisanje izvjestaja */
+    char nazivFajla[100];
+    sprintf(nazivFajla, "izvjestaj_odjeljenje_%s.txt", odjeljenje);
+
+    fOut = fopen(nazivFajla, "w");
+    if (!fOut) {
+        printf("Greska pri kreiranju izvjestaja.\n");
+        fclose(fZakljucne);
+        return;
+    }
+
+    fprintf(fOut, "=== IZVJESTAJ O USPJEHU ODJELJENJA %s ===\n\n", odjeljenje);
+
+    for (int i = 0; i < brojUcenika; i++) {
+        fprintf(fOut, "Ucenik: %s %s\n", imena[i], prezimena[i]);
+
+        rewind(fZakljucne);
+        while (fgets(linija, sizeof(linija), fZakljucne)) {
+            if (strstr(linija, imena[i]) &&
+                strstr(linija, prezimena[i])) {
+
+                char predmet[50];
+                int ocjena;
+
+                if (sscanf(linija,
+                    "Ucenik: %*s %*s | Predmet: %49[^|]| Zakljucna: %d",
+                    predmet, &ocjena) == 2)
+                {
+                    fprintf(fOut, "  %s: %d\n", predmet, ocjena);
+                }
+            }
+        }
+        fprintf(fOut, "\n");
+    }
+
+    fclose(fZakljucne);
+    fclose(fOut);
+
+    printf("Izvjestaj uspjesno generisan: %s\n", nazivFajla);
 }
