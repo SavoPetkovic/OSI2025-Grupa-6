@@ -9,6 +9,7 @@ void pregledIzostanakaNastavnik();
 void unosOcjene();
 void pregledOcjenaOdjeljenja();
 void generisanjeIzvjestajUspjehaUcenika(); 
+void generisanjeIzvjestajaUspjehaOdjeljenja();
 
 
 
