@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include "admin.h"
 #include "raspored.h"
+#include "nastavnik.h"
+
 
 void blokirajKorisnika() 
 {
@@ -86,6 +88,7 @@ void adminMeni()
         printf("9. Pregled izostanaka (read-only)\n");
         printf("10. Pregled svih ocjena\n");
         printf("11. Pregled rasporeda casova\n");
+        printf("12. Generisanje izvjestaja o uspjehu ucenika\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -131,6 +134,9 @@ void adminMeni()
                 break;
             case 11:
                 pregledRasporeda();
+                break;
+            case 12: 
+                generisanjeIzvjestajUspjehaUcenika();
                 break;
             case 0:
                 printf("Izlaz iz admin menija.\n");

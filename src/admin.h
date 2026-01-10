@@ -12,6 +12,7 @@ void definisanjeVrstaOcjena();
 void pregledIzostanaka();
 void pregledSvihOcjena();
 void dodajUcenikaUOdjeljenje();
+void generisanjeIzvjestajUspjehaUcenika(); 
 
 
 

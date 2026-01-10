@@ -87,6 +87,7 @@ void nastavnikMeni()
         printf("5. Pregled izostanaka\n");
         printf("6. Pregled rasporeda casova\n");
         printf("7. Pregled ocjena odjeljenja (razrednik)\n");
+        printf("8. Generisanje izvjestaja o uspjehu ucenika\n");
         printf("0. Izlaz\n");
         printf("Izbor: ");
         scanf("%d", &izbor);
@@ -114,9 +115,10 @@ void nastavnikMeni()
                 break;
             case 7:
                 pregledOcjenaOdjeljenja();
-                 break;
-
-
+                break;
+            case 8: 
+                generisanjeIzvjestajUspjehaUcenika(); 
+                break;
             case 0:
                 printf("Izlaz iz nastavnickog menija.\n");
                 break;
@@ -522,4 +524,66 @@ void pregledOcjenaOdjeljenja()
     if (!imaOcjena) {
         printf("Nema ocjena za izabrani predmet.\n");
     }
+}
+
+void generisanjeIzvjestajUspjehaUcenika()
+{
+    char ime[50], prezime[50];
+    char linija[600];
+    int imaZakljucnih = 0;
+
+    printf("\n=== GENERISANJE IZVJESTAJA O USPJEHU ===\n");
+
+    printf("Ime ucenika: ");
+    scanf("%49s", ime);
+
+    printf("Prezime ucenika: ");
+    scanf("%49s", prezime);
+
+    FILE *fZak = fopen("zakljucne_ocjene.txt", "r");
+    if (!fZak) {
+        printf("Greska: zakljucne_ocjene.txt ne postoji.\n");
+        return;
+    }
+
+     while (fgets(linija, sizeof(linija), fZak)) {
+        if (strstr(linija, ime) && strstr(linija, prezime)) {
+            imaZakljucnih = 1;
+            break;
+        }
+    }
+    fclose(fZak);
+
+    if (!imaZakljucnih) {
+        printf("Ucenik nema zakljucnih ocjena. Izvjestaj se ne moze generisati.\n");
+        return;
+    }
+
+     char nazivFajla[200];
+    sprintf(nazivFajla, "izvjestaj_%s_%s.txt", ime, prezime);
+
+    FILE *fOut = fopen(nazivFajla, "w");
+    FILE *fIn = fopen("zakljucne_ocjene.txt", "r");
+
+    fprintf(fOut, "=== IZVJESTAJ O USPJEHU ===\n");
+    fprintf(fOut, "Ucenik: %s %s\n", ime, prezime);
+    fprintf(fOut, "---------------------------------------\n");
+
+    while (fgets(linija, sizeof(linija), fIn)) {
+        if (strstr(linija, ime) && strstr(linija, prezime)) {
+            char predmet[50];
+            int ocjena;
+            if (sscanf(linija,
+                   "Ucenik: %*s %*s | Predmet: %49[^|]| Zakljucna: %d",
+                   predmet, &ocjena) == 2)
+        {
+        fprintf(fOut, "%s: %d\n", predmet, ocjena);
+        }
+    }
+}
+
+    fclose(fIn);
+    fclose(fOut);
+
+    printf("Izvjestaj generisan: %s\n", nazivFajla);
 }
