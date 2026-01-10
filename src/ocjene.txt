@@ -1,1 +1,3 @@
 Ime: Petar | Prezime: Markovic | Odjeljenje: 2A | Predmet: Matematika | Ocjena: 4 | Datum: 07.01.2026.
+Ime: Petar | Prezime: Markovic | Odjeljenje: 2A | Predmet: Fizika | Ocjena: 5 | Datum: 23.01.2026
+Ime: Petar | Prezime: Markovic | Odjeljenje: 2A | Predmet: Fizika | Ocjena: 3 | Datum: 27.01.2026
