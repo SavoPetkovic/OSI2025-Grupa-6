@@ -8,6 +8,7 @@ void zakljuciOcjenu();
 void pregledIzostanakaNastavnik();
 void unosOcjene();
 void pregledOcjenaOdjeljenja();
+void generisanjeIzvjestajUspjehaUcenika(); 
 
 
 
