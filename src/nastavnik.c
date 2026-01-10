@@ -255,16 +255,21 @@ void zakljuciOcjenu()
 
     printf("\nOcjene:\n");
     while (fgets(linija, sizeof(linija), fOcjene)) {
-        if (strstr(linija, ime) &&
-            strstr(linija, prezime) &&
-            strstr(linija, predmet)) {
+    if (strstr(linija, ime) &&
+        strstr(linija, prezime) &&
+        strstr(linija, predmet)) {
 
-            sscanf(linija, "%*[^0-9]%d", &ocjena);
+        if (sscanf(linija,
+            "Ime: %*[^|]| Prezime: %*[^|]| Odjeljenje: %*[^|]| Predmet: %*[^|]| Ocjena: %d",
+            &ocjena) == 1)
+        {
             printf("- %d\n", ocjena);
             suma += ocjena;
             broj++;
         }
     }
+}
+
     fclose(fOcjene);
 
     if (broj == 0) {
