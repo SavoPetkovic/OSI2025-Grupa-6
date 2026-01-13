@@ -35,76 +35,44 @@ void pregledIzostanakaUcenik()
     if (!ima)
         printf("Nema zabiljezenih izostanaka.\n");
 }
-
-void pregledOcjenaUcenik() {
-    char ime[50], prezime[50];
-    char linija[300];
-    char predmeti[50][50]; // lista predmeta za učenika
-    int predmetCount = 0;
+void trim(char *str)
+{
     int i;
+
+  
+    for (i = strlen(str) - 1; i >= 0 && str[i] == ' '; i--) {
+        str[i] = '\0';
+    }
+
+    while (*str == ' ') {
+        memmove(str, str + 1, strlen(str));
+    }
+}
+
+
+void pregledOcjenaUcenik()
+{
+    FILE *f;
+    char linija[600];
+
+    char ime[50], prezime[50], predmet[50];
+    char fIme[50], fPrezime[50], fPredmet[50];
+    int ocjena;
 
     printf("\n=== PREGLED MOJIH OCJENA ===\n");
 
     printf("Ime: ");
     scanf("%49s", ime);
+
     printf("Prezime: ");
     scanf("%49s", prezime);
 
-    FILE *f = fopen("ocjene.txt", "r");
-    if (!f) {
-        printf("Nema evidentiranih ocjena.\n");
-        return;
-    }
+    getchar(); // očisti '\n'
 
-    while (fgets(linija, sizeof(linija), f)) {
-        if (strstr(linija, ime) && strstr(linija, prezime)) {
-    
-            char tempPredmet[50];
-            sscanf(linija, "Ime: %*[^|]| Prezime: %*[^|]| Predmet: %49[^|]| Ocjena: %*s", tempPredmet);
+    printf("Unesite naziv predmeta: ");
+    fgets(predmet, sizeof(predmet), stdin);
+    predmet[strcspn(predmet, "\n")] = 0; // ukloni newline
 
-            
-            int exists = 0;
-            for (i = 0; i < predmetCount; i++) {
-                if (strcmp(predmeti[i], tempPredmet) == 0) {
-                    exists = 1;
-                    break;
-                }
-            }
-            if (!exists) {
-                strcpy(predmeti[predmetCount], tempPredmet);
-                predmetCount++;
-            }
-        }
-    }
-
-    fclose(f);
-
-    if (predmetCount == 0) {
-        printf("Nemate zabilježenih ocjena.\n");
-        return;
-    }
-
-    
-    printf("\nPredmeti koje pohađate:\n");
-    for (i = 0; i < predmetCount; i++) {
-        printf("%d. %s\n", i + 1, predmeti[i]);
-    }
-
-
-    int izbor;
-    do {
-        printf("Unesite broj predmeta za prikaz ocjena: ");
-        scanf("%d", &izbor);
-        if (izbor < 1 || izbor > predmetCount) {
-            printf("Nepostojeca opcija, pokusajte ponovo.\n");
-        }
-    } while (izbor < 1 || izbor > predmetCount);
-
-    char izabraniPredmet[50];
-    strcpy(izabraniPredmet, predmeti[izbor - 1]);
-
-
-    printf("\nOcjene za predmet %s:\n", izabraniPredmet);
     f = fopen("ocjene.txt", "r");
     if (!f) {
         printf("Greska pri otvaranju fajla ocjene.txt\n");
@@ -112,22 +80,35 @@ void pregledOcjenaUcenik() {
     }
 
     int imaOcjena = 0;
+
     while (fgets(linija, sizeof(linija), f)) {
-        if (strstr(linija, ime) && strstr(linija, prezime) && strstr(linija, izabraniPredmet)) {
-            // Ispis linije
-            char predmet[50], ocjena[10];
-            sscanf(linija, "Ime: %*[^|]| Prezime: %*[^|]| Predmet: %49[^|]| Ocjena: %9s", predmet, ocjena);
-            printf("- %s\n", ocjena);
+    if (sscanf(linija,
+        "Ime: %49[^|]| Prezime: %49[^|]| Odjeljenje: %*[^|]| Predmet: %49[^|]| Ocjena: %d",
+        fIme, fPrezime, fPredmet, &ocjena) == 4)
+    {
+        trim(fIme);
+        trim(fPrezime);
+        trim(fPredmet);
+
+        if (strcmp(fIme, ime) == 0 &&
+            strcmp(fPrezime, prezime) == 0 &&
+            strcmp(fPredmet, predmet) == 0)
+        {
+            printf("- %d\n", ocjena);
             imaOcjena = 1;
         }
     }
+}
+
 
     fclose(f);
 
     if (!imaOcjena) {
-        printf("Nemate ocjena za ovaj predmet.\n");
+        printf("Nemate ocjena iz predmeta %s.\n", predmet);
     }
 }
+
+
 
 void ucenikMeni()
 {
