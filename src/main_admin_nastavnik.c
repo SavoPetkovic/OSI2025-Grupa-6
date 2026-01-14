@@ -1,10 +1,9 @@
+
 #include <stdio.h>
 #include <string.h>
+#include "admin.h"
 #include "login.h"
-#include "roditelj.h"
-#include "ucenik.h"
-#include "raspored.h"
-
+#include "nastavnik.h"
 
 int main() {
     char uloga[20];
@@ -12,11 +11,11 @@ int main() {
     if (prijavaKorisnika(uloga)) {
         printf("\nPristup funkcionalnostima sistema za ulogu: %s\n", uloga);
 
-        if (strcmp(uloga, "roditelj") == 0) {
-            roditeljMeni();  
+        if (strcmp(uloga, "admin") == 0) {
+            adminMeni();  
         }
-        else if (strcmp(uloga, "ucenik") == 0) {
-            ucenikMeni();
+        else if (strcmp(uloga, "nastavnik") == 0) {
+            nastavnikMeni();
         }
         else {
             printf("Ova uloga nema pristup ovom programu.\n");
@@ -27,3 +26,4 @@ int main() {
 
     return 0;
 }
+
